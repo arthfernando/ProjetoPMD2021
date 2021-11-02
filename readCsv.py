@@ -5,7 +5,6 @@ from pyspark.sql.functions import *
 
 def formatDate(x):
     splitcol = split(x["date_added"], "-")
-    # mes = (splitcol.getItem(0))
     mes = from_unixtime(unix_timestamp(splitcol.getItem(0), "MMMM"), "MM")
     dia = splitcol.getItem(1)
     ano = splitcol.getItem(2)

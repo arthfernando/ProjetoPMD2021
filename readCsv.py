@@ -22,7 +22,22 @@ spark = SparkSession.builder \
 df = spark.read.options(header='True', inferSchema='True', delimiter=',', quote='\"', escape="\"").csv("netflix/netflix_titles.csv")
 
 # substitui o valor null para NAO_INFORMADO
-df2 = df.na.fill("NAO_INFORMADO")
+aux = df.na.fill("NAO_INFORMADO")
+df2 = aux.select(\
+    col("show_id"),\
+    col("type"),\
+    col("title"),\
+    col("director"),\
+    split(col("cast"), ",").alias("cast"),\
+    split(col("country"), ",").alias("country"),\
+    col("date_added"),\
+    col("release_year"),\
+    col("rating"),\
+    col("duration"),\
+    split(col("listed_in"), ",").alias("listed_in"),\
+    col("description")
+)
+df2.show()
 
 # altera classificao indicativa para o padrao brasileiro
 df3 = df2.withColumn("rating", when(df2.rating == "G", "L") \
